@@ -18,7 +18,7 @@ class TestDatset(unittest.TestCase):
         self.label_path = os.path.join(project_path, "../train-rle.csv")
         self.height = 1024
         self.width = 1024
-        self.ds = PneumoDataset(self.label_path, self.fns, self.height, self.width)
+        self.ds = PneumoDataset(self.label_path, self.fns, None, self.height, self.width)
 
     def test_dataset(self):
         example = self.ds[0]
