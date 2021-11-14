@@ -1,3 +1,5 @@
+"""Originally had this written for another """
+
 import gc
 import os
 import pickle
@@ -105,8 +107,6 @@ def train_model(
         logging.info(f"epoch_time {time() - epoch_start}")
         logging.info(f"batch_time {train_epoch_metrics['batch_time']}")
 
-        # epoch_metircs is dict with keys: loss, token_acc, pixel_acc
-
         for k in history["train"].keys():
             history["train"][k].append(train_epoch_metrics[k])
 
@@ -158,16 +158,10 @@ def train_epoch(model, train_loader, optimizer, fp16_scaler):
 
     for batch in tqdm(train_loader):
         forward_batch = {
-            "grid_target": batch["grid_target"].cuda(),
-            "grid": batch["grid"].cuda(),
             "mask": batch["mask"].cuda(),
-            "label_grid": batch["label_grid"].cuda(),
             "image": batch["image"].cuda()
             if batch.get("image", None) is not None
             else None,
-            "label_entity_grid": batch["label_entity_grid"].cuda(),
-            "label_grid_mask": batch["label_grid_mask"].cuda(),
-            "token_mask": batch["token_mask"].cuda(),
         }
 
         optimizer.zero_grad()
@@ -206,16 +200,11 @@ def test_epoch(model, test_loader):
     with torch.no_grad():
         for batch in test_loader:
             forward_batch = {
-                "grid_target": batch["grid_target"].cuda(),
-                "grid": batch["grid"].cuda(),
                 "mask": batch["mask"].cuda(),
                 "label_grid": batch["label_grid"].cuda(),
                 "image": batch["image"].cuda()
                 if batch.get("image", None) is not None
                 else None,
-                "label_entity_grid": batch["label_entity_grid"].cuda(),
-                "label_grid_mask": batch["label_grid_mask"].cuda(),
-                "token_mask": batch["token_mask"].cuda(),
             }
 
             loss = model.forward_batch(forward_batch)

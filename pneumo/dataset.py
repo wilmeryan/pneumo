@@ -10,7 +10,8 @@ from pydicom.dataset import FileDataset
 from torch.utils.data import Dataset
 
 from pneumo.mask_functions import mask2rle, rle2mask
-
+import torch
+from typing import Dict, Any
 
 class PneumoDataset(Dataset):
     def __init__(
@@ -66,9 +67,16 @@ class PneumoDataset(Dataset):
                 image=dcm_data["img"], mask=dcm_data["target"]
             )
             dcm_data["img"] = transformed["image"]
-            dcm_data["img"] = transformed["mask"]
+            dcm_data["target"] = transformed["mask"]
         dcm_data["img"] = np.expand_dims(dcm_data["img"], axis=0).astype(np.float32)
-        return dcm_data
+        dcm_data["target"] = dcm_data["target"].astype(np.float32)
+        return self.to_tensors(dcm_data)
+
+    def to_tensors(self, data: Dict[str, Any]):
+        return {
+            "img": torch.as_tensor(data["img"]).cuda(),
+            "target": torch.as_tensor(data["target"]).cuda()
+        }
 
     def __len__(self):
         return len(self.fns)

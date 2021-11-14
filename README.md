@@ -42,3 +42,8 @@ development.
 3. k fold cross validation not feasible due to training time
 3. picked up torch lightning
 4. Just a few experiments to show model evaluation
+
+## FUTURE TO-DOS
+- learning rate scheduling
+- K fold cross validation for picking best model
+- TTA + ensembling

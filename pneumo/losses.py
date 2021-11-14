@@ -3,11 +3,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-def dice_loss(input, target):
+def dice_loss(inputs, targets):
     smooth = 1.
 
-    iflat = F.sigmoid(input.view(-1))
-    tflat = target.view(-1)
+    iflat = F.sigmoid(inputs.view(-1))
+    tflat = targets.view(-1)
     intersection = (iflat * tflat).sum()
     
     return 1 - ((2. * intersection + smooth) /
@@ -15,7 +15,7 @@ def dice_loss(input, target):
 
 def focal_loss(inputs, targets, alpha=0.8, gamma=2, smooth=1):       
     #flatten label and prediction tensors
-    inputs = F.sigmoid(input.view(-1))
+    inputs = F.sigmoid(inputs.view(-1))
     targets = targets.view(-1)
 
     #first compute binary cross-entropy 
