@@ -16,17 +16,17 @@ class TestDatset(unittest.TestCase):
 
         self.fns = glob.glob(os.path.join(project_path, "**/*.dcm"), recursive=True)
         self.label_path = os.path.join(project_path, "../train-rle.csv")
-        self.height = 1024
-        self.width = 1024
-        self.ds = PneumoDataset(self.label_path, self.fns, None, self.height, self.width)
+        self.ds = PneumoDataset(
+            self.label_path, self.fns, None
+        )
 
     def test_dataset(self):
         example = self.ds[0]
-        self.assertEqual(example["img"].shape, (1024, 1024))
-        self.assertEqual(example["target"].shape, (1024, 1024))
+        self.assertEqual(example["img"].shape, (1, 1024, 1024))
+        self.assertEqual(example["target"].shape, (1, 1024, 1024))
 
     def test_dataloader(self):
         dataloader = DataLoader(self.ds, batch_size=32, shuffle=True, num_workers=4)
         batch = next(iter(dataloader))
-        self.assertEqual(batch["img"].shape, (32, 1024, 1024))
-        self.assertEqual(batch["target"].shape, (32, 1024, 1024))
+        self.assertEqual(batch["img"].shape, (32, 1, 1024, 1024))
+        self.assertEqual(batch["target"].shape, (32, 1, 1024, 1024))

@@ -16,7 +16,7 @@ Explain how to decide when to stop training.
 Tips: Use late submission pool to validate and benchmark results. Discuss.
 6. Discuss shortcomings and the improvements you would make to the dataset, evaluation
 metrics and algorithm.
-Tips: Describe limitations of the baseline. List and prioritise next steps for model
+Tips:a Describe limitations of the baseline. List and prioritise next steps for model
 development.
 
 # Tackling the problem
@@ -27,3 +27,18 @@ development.
 4. predictor
 5. training notebook
 6. inference notebook
+
+## Stuff I did
+1. torch dataset + dataloader
+2. fp16
+3. efficientnet
+4. wandb
+5. torch lightning
+
+## Considerations
+1. dev time + training time
+2. Resource constraint with only a local 2080 super (8gb)
+3. Didn't want to use TPU as it's a hassle to set-up and only available on kaggle platform
+3. k fold cross validation not feasible due to training time
+3. picked up torch lightning
+4. Just a few experiments to show model evaluation

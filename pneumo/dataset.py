@@ -18,18 +18,14 @@ class PneumoDataset(Dataset):
         masks_path,
         dcm_paths,
         transforms: Optional[alb.core.composition.Compose] = None,
-        height=1024,
-        width=1024,
     ):
         self.df = pd.read_csv(masks_path)
         self.fns = dcm_paths
-        self.height = height
-        self.width = width
         self.transforms = transforms
 
     def load_dcm(self, dcm: FileDataset):
         return {
-            "img": dcm.pixel_array,
+            "img": dcm.pixel_array / 255,
             "age": dcm.PatientAge,
             "sex": dcm.PatientSex,
             "view_position": dcm.ViewPosition,
@@ -55,7 +51,7 @@ class PneumoDataset(Dataset):
         return mask_arrs
 
     def __getitem__(self, idx: int):
-        """Return a dict so that"""
+        """Return a dict to be used by the data loader"""
         fn = self.fns[idx]
         dcm = pydicom.dcmread(fn)
         dcm_data = self.load_dcm(dcm)
@@ -71,6 +67,7 @@ class PneumoDataset(Dataset):
             )
             dcm_data["img"] = transformed["image"]
             dcm_data["img"] = transformed["mask"]
+        dcm_data["img"] = np.expand_dims(dcm_data["img"], axis=0).astype(np.float32)
         return dcm_data
 
     def __len__(self):
