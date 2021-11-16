@@ -11,7 +11,7 @@ def dice_loss(inputs, targets, eps=1):
     
     return 1 - ((2. * intersection + eps) / (iflat.sum() + tflat.sum() + eps))
 
-def weighted_soft_dice_loss(inputs, targets, v2=0.9, eps=1):
+def weighted_soft_dice_loss(inputs, targets, v2=0.9, eps=1e-4):
     """
     From https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9180275
     allows contribution of negative samples
@@ -27,7 +27,7 @@ def weighted_soft_dice_loss(inputs, targets, v2=0.9, eps=1):
     intersection = (g_iflat * g_tflat).sum()
 
     calc = 1 - ((2 * intersection + eps)/ (torch.abs(g_iflat).sum() + torch.abs(g_tflat).sum() + eps))
-    return calc
+    return torch.clip(calc, max=1-1e-4)
 
 def focal_loss(inputs, targets, alpha=0.8, gamma=2):       
     #flatten label and prediction tensors
