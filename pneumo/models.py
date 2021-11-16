@@ -162,7 +162,7 @@ class UNetLightning(pl.LightningModule):
         self.encoder = unet_model.encoder
         self.decoder = unet_model.decoder
         self.seg_head = nn.Sequential(
-            # nn.Dropout2d(0.1),
+            nn.Dropout2d(0.0625),
             nn.Conv2d(16, 4, kernel_size=3, padding="same"),
             nn.ReLU(),
             nn.BatchNorm2d(4),
@@ -201,7 +201,7 @@ class UNetLightning(pl.LightningModule):
 
             focal_loss = self.losses["focal"](out, b_targets)
             bce_loss = self.losses["bce"](out, b_targets)
-            loss = focal_loss - torch.log(1 - dice_loss) # + bce_loss
+            loss = 3* focal_loss - torch.log(1 - dice_loss) # + bce_loss
 
         self.log("train_focal_loss", focal_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log("train_dice_loss", dice_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
@@ -225,7 +225,7 @@ class UNetLightning(pl.LightningModule):
 
             focal_loss = self.losses["focal"](out, b_targets)
             bce_loss = self.losses["bce"](out, b_targets)
-            loss = focal_loss - torch.log(1 - dice_loss) # + bce_loss
+            loss = 3*focal_loss - torch.log(1 - dice_loss) # + bce_loss
 
         self.log("valid_focal_loss", focal_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log("valid_dice_loss", dice_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
