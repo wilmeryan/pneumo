@@ -60,3 +60,7 @@ This meant had to resize from (1024, 1024) to (256, 256) for faster training
 ### ML
 - K fold cross validation for picking best model
 - TTA + ensembling
+- experiment with different sizes
+- hyperparam sweep
+- Experiment with different losses
+- a requirements.txt would be nice too

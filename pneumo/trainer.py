@@ -1,4 +1,6 @@
-"""Originally had this written for another """
+"""Originally had this written for another segmentation task... 
+For this project i'm using torch lightning instead. Leaving this here for reference anyways.
+"""
 
 import gc
 import os
