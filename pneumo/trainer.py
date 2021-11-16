@@ -26,8 +26,8 @@ def train_model(
     resume_from_epoch=None,
     num_workers=0,
     log_metrics=True,
-    model_name="demasking_model",
-    project_name="pixels",
+    model_name="",
+    project_name="",
     fp16=True,
 ):
     """
@@ -201,7 +201,6 @@ def test_epoch(model, test_loader):
         for batch in test_loader:
             forward_batch = {
                 "mask": batch["mask"].cuda(),
-                "label_grid": batch["label_grid"].cuda(),
                 "image": batch["image"].cuda()
                 if batch.get("image", None) is not None
                 else None,
@@ -213,9 +212,6 @@ def test_epoch(model, test_loader):
                 acc_metrics = model.get_batch_accuracies(output, forward_batch)
             except ZeroDivisionError as e:
                 traceback.print_exc()
-                print(
-                    f"Label_grid_mask has {forward_batch['label_grid_mask'].sum()} unmasked values for doc_id {batch['doc_id']} This likely means that len(tokens)==0 Skipping instance for evaluation... "
-                )
                 continue
             # Append batch metrics
             for k, v in acc_metrics.items():

@@ -12,12 +12,8 @@ class MetaEncoder(nn.Module):
     def __init__(self):
         super().__init__()
         self.encoder = nn.Sequential(
-            nn.Linear(3, 16),
-            nn.BatchNorm1d(16),
-            nn.ReLU(),
-            nn.Linear(16, 8),
+            nn.Linear(3, 8),
             nn.BatchNorm1d(8),
-            nn.ReLU(),
             nn.Linear(8, 1),
             nn.Sigmoid()
         )
@@ -87,7 +83,7 @@ class MetaUNetLightning(pl.LightningModule):
 
             focal_loss = self.losses["focal"](out, b_targets)
             # bce_loss = self.losses["bce"](out, b_targets)
-            loss = focal_loss - torch.log(1 - dice_loss) #+ bce_loss
+            loss = focal_loss - torch.log(1 - ws_dice_loss) #+ bce_loss
 
         self.log("train_focal_loss", focal_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log("train_dice_loss", dice_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
@@ -113,7 +109,7 @@ class MetaUNetLightning(pl.LightningModule):
 
             focal_loss = self.losses["focal"](out, b_targets)
             # bce_loss = self.losses["bce"](out, b_targets)
-            loss = focal_loss - torch.log(1 - dice_loss) # + bce_loss
+            loss = focal_loss - torch.log(1 - ws_dice_loss) # + bce_loss
 
         self.log("valid_focal_loss", focal_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log("valid_dice_loss", dice_loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)

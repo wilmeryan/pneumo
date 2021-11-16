@@ -34,26 +34,29 @@ development.
 3. efficientnet
 4. wandb
 5. torch lightning
+6. Experiment to implement different loss/ mixture of losses
+
 
 ## Project Choices
 1. Originally want to use local GPU for better code structure + quality
 This meant had to resize from (1024, 1024) to (256, 256) for faster training
-2. 
+2. train off the shelf efficientnet
 
 ## Considerations
 1. dev time + training time
 2. Resource constraint with only a local 2080 super (8gb)
-3. Didn't want to use TPU as it's a hassle to set-up and only available on kaggle platform
+3. Didn't want to use TPU as it's a hassle to set-up and only available on kaggle/colab platform
 3. k fold cross validation not feasible due to training time
 3. picked up torch lightning
 4. Just a few experiments to show model evaluation
 
 ## Ouches
-- label smoothing + dice loss led to very slow dice loss change
-- 
+- wasted time with kaggle dataset not being fully available
+- wandb not configured properly for repeatable experiments
+- torch lightning funky business with fp16 + doesn't play well with kaggle
+- proper hparams tracking with wandb
 
 ## FUTURE TO-DOS
-- learning rate scheduling
+### ML
 - K fold cross validation for picking best model
 - TTA + ensembling
-- proper hparams tracking with wandb
