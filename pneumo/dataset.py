@@ -74,7 +74,7 @@ class PneumoDataset(Dataset):
 
     def to_tensors(self, data: Dict[str, Any]):
         return {
-            "img": torch.as_tensor(data["img"]).cuda(),
+            "img": torch.as_tensor(data["img"]).cuda().half(),
             "target": torch.as_tensor(data["target"]).cuda()
         }
 

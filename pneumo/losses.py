@@ -3,20 +3,36 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-def dice_loss(inputs, targets):
-    smooth = 1.
+def dice_loss(inputs, targets, eps=1):
 
-    iflat = F.sigmoid(inputs.view(-1))
-    tflat = targets.view(-1)
+    iflat = inputs.view(-1).detach()
+    tflat = targets.view(-1).detach()
     intersection = (iflat * tflat).sum()
     
-    return 1 - ((2. * intersection + smooth) /
-              (iflat.sum() + tflat.sum() + smooth))
+    return 1 - ((2. * intersection + eps) / (iflat.sum() + tflat.sum() + eps))
 
-def focal_loss(inputs, targets, alpha=0.8, gamma=2, smooth=1):       
+def weighted_soft_dice_loss(inputs, targets, v2=0.9, eps=1):
+    """
+    From https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9180275
+    allows contribution of negative samples
+    """
+    v1 = 1 - v2
+
+    iflat = inputs.view(-1).detach()
+    tflat = targets.view(-1).detach()
+
+    w = (tflat * (v2 - v1)) + v1
+    g_iflat = w * (2 * iflat - 1)
+    g_tflat = w * (2 * tflat - 1)
+    intersection = (g_iflat * g_tflat).sum()
+
+    calc = 1 - ((2 * intersection + eps)/ (torch.abs(g_iflat).sum() + torch.abs(g_tflat).sum() + eps))
+    return calc
+
+def focal_loss(inputs, targets, alpha=0.8, gamma=2):       
     #flatten label and prediction tensors
-    inputs = F.sigmoid(inputs.view(-1))
-    targets = targets.view(-1)
+    inputs = inputs.view(-1).detach()
+    targets = targets.view(-1).detach()
 
     #first compute binary cross-entropy 
     BCE = F.binary_cross_entropy(inputs, targets, reduction='mean')

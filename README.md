@@ -35,6 +35,11 @@ development.
 4. wandb
 5. torch lightning
 
+## Project Choices
+1. Originally want to use local GPU for better code structure + quality
+This meant had to resize from (1024, 1024) to (256, 256) for faster training
+2. 
+
 ## Considerations
 1. dev time + training time
 2. Resource constraint with only a local 2080 super (8gb)
@@ -43,7 +48,12 @@ development.
 3. picked up torch lightning
 4. Just a few experiments to show model evaluation
 
+## Ouches
+- label smoothing + dice loss led to very slow dice loss change
+- 
+
 ## FUTURE TO-DOS
 - learning rate scheduling
 - K fold cross validation for picking best model
 - TTA + ensembling
+- proper hparams tracking with wandb
